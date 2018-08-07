@@ -5,7 +5,8 @@ class Main extends React.Component {
     super (props);
 
     this.state = {
-      articles: null
+      articles: null,
+      query: null,
     };
 
     this.fetchArticles = this.fetchArticles.bind(this);
@@ -13,6 +14,8 @@ class Main extends React.Component {
 
   fetchArticles (event) {
     event.preventDefault();
+    let queryString = this.state.query;
+    console.log(queryString);
 
     fetch(url, {
       method: "POST",
@@ -20,14 +23,19 @@ class Main extends React.Component {
         "Content-type": "application/json",
         'Authorization': 'Bearer ' + apiKey,
       },
-      body: '{"query": "tech"}'
+      body: `{"query": "${queryString}"}`
     })
       .then(res => res.json())
       .catch(error => console.log('Error:', error))
-      // .then(response => console.log('Success:', response.data));
       .then(response => {
         this.setState({ articles: response.data });
       });
+  }
+
+  update (field) {
+    return event => {
+      this.setState({ [field]: event.target.value });
+    };
   }
 
   render () {
@@ -35,11 +43,14 @@ class Main extends React.Component {
 
     if (this.state.articles) {
       let articles = this.state.articles;
-      content = articles.map(article => {
+      content = articles.map((article, i) => {
         return (
-          <ul>
+          <ul key={i}>
             <li>{article.title}</li>
+            <li>by {article.authors}</li>
             <li>{article.description}</li>
+            <li>{article.url}</li>
+            <li></li>
           </ul>
         );
       });
@@ -49,10 +60,11 @@ class Main extends React.Component {
 
     return (
       <div>
-        <h1>main component</h1>
-        <form onSubmit={this.fetchArticles}>
-          <input type="text" placeholder="Search terms"/>
-          <input type="submit"/>
+        <form onSubmit={event => this.fetchArticles(event)}>
+          <label htmlFor="search">Search by keywords:
+            <input type="text" placeholder="Search terms" onChange={this.update('query')}/>
+            <input type="submit"/>
+          </label>
         </form>
         <ul>
           {content}

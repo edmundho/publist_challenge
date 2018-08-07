@@ -114,11 +114,6 @@ exports.default = function () {
   return _react2.default.createElement(
     'div',
     null,
-    _react2.default.createElement(
-      'h1',
-      null,
-      'React!'
-    ),
     _react2.default.createElement(_main2.default, null)
   );
 };
@@ -147,6 +142,8 @@ var _react2 = _interopRequireDefault(_react);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
+function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
@@ -162,7 +159,8 @@ var Main = function (_React$Component) {
     var _this = _possibleConstructorReturn(this, (Main.__proto__ || Object.getPrototypeOf(Main)).call(this, props));
 
     _this.state = {
-      articles: null
+      articles: null,
+      query: null
     };
 
     _this.fetchArticles = _this.fetchArticles.bind(_this);
@@ -175,6 +173,8 @@ var Main = function (_React$Component) {
       var _this2 = this;
 
       event.preventDefault();
+      var queryString = this.state.query;
+      console.log(queryString);
 
       fetch(url, {
         method: "POST",
@@ -182,28 +182,37 @@ var Main = function (_React$Component) {
           "Content-type": "application/json",
           'Authorization': 'Bearer ' + apiKey
         },
-        body: '{"query": "tech"}'
+        body: "{\"query\": \"" + queryString + "\"}"
       }).then(function (res) {
         return res.json();
       }).catch(function (error) {
         return console.log('Error:', error);
-      })
-      // .then(response => console.log('Success:', response.data));
-      .then(function (response) {
+      }).then(function (response) {
         _this2.setState({ articles: response.data });
       });
     }
   }, {
+    key: "update",
+    value: function update(field) {
+      var _this3 = this;
+
+      return function (event) {
+        _this3.setState(_defineProperty({}, field, event.target.value));
+      };
+    }
+  }, {
     key: "render",
     value: function render() {
+      var _this4 = this;
+
       var content = _react2.default.createElement("div", null);
 
       if (this.state.articles) {
         var articles = this.state.articles;
-        content = articles.map(function (article) {
+        content = articles.map(function (article, i) {
           return _react2.default.createElement(
             "ul",
-            null,
+            { key: i },
             _react2.default.createElement(
               "li",
               null,
@@ -212,8 +221,20 @@ var Main = function (_React$Component) {
             _react2.default.createElement(
               "li",
               null,
+              "by ",
+              article.authors
+            ),
+            _react2.default.createElement(
+              "li",
+              null,
               article.description
-            )
+            ),
+            _react2.default.createElement(
+              "li",
+              null,
+              article.url
+            ),
+            _react2.default.createElement("li", null)
           );
         });
       } else {
@@ -228,15 +249,17 @@ var Main = function (_React$Component) {
         "div",
         null,
         _react2.default.createElement(
-          "h1",
-          null,
-          "main component"
-        ),
-        _react2.default.createElement(
           "form",
-          { onSubmit: this.fetchArticles },
-          _react2.default.createElement("input", { type: "text", placeholder: "Search terms" }),
-          _react2.default.createElement("input", { type: "submit" })
+          { onSubmit: function onSubmit(event) {
+              return _this4.fetchArticles(event);
+            } },
+          _react2.default.createElement(
+            "label",
+            { htmlFor: "search" },
+            "Search by keywords:",
+            _react2.default.createElement("input", { type: "text", placeholder: "Search terms", onChange: this.update('query') }),
+            _react2.default.createElement("input", { type: "submit" })
+          )
         ),
         _react2.default.createElement(
           "ul",
