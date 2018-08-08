@@ -1,0 +1,90 @@
+html, body {
+  /* width: 95%; */
+  /* margin: 0 auto; */
+  font-family: Helvetica Neue;
+  background: snow;
+}
+
+#banner {
+  display: flex;
+  justify-content: space-between;
+  background: rgb(39, 58, 111);
+  color: snow;
+  padding: 5px;
+  position: fixed;
+  width: 100%;
+  top: 0;
+}
+
+#banner h1 {
+  padding: 15px;
+  font-size: 22px;
+}
+
+#banner ul {
+  display: flex;
+  align-items: center;
+}
+
+#banner li {
+  padding: 15px;
+}
+
+#banner a {
+  text-decoration: none;
+  color: inherit;
+  transition: 0.5s;
+}
+
+#banner a:hover {
+  color: lightgray;
+}
+
+#main form {
+  padding: 15px 0;
+  width: 100%;
+  text-align: center;
+  position: fixed;
+  top: 62px;
+  left: 0;
+  background: snow;
+}
+
+#main #search-bar {
+  padding: 5px;
+  font-size: 15px;
+  width: 90%;
+  margin: 0 auto;
+  border-radius: 5px;
+}
+
+#main #content {
+  margin: 125px 15px 15px 15px;
+  padding: 20px;
+  border-top: 1px solid lightgray;
+}
+
+#article {  
+  padding: 10px;
+  margin: 10px;
+  background: rgb(100, 137, 211);
+  border-radius: 6px;
+  border: 1px solid steelblue;
+  color: whitesmoke;
+  box-shadow: 1px 1px 1px 1px lightgray;
+}
+
+#article li:first-child {
+  font-size: 25px;
+  text-decoration: underline;
+  margin: 0 0 5px 0;
+  line-height: 30px;
+}
+
+#article li {
+  padding: 5px;
+}
+
+#article #article-desc {
+  line-height: 20px;
+}

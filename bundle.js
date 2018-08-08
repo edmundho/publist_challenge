@@ -108,13 +108,86 @@ var _main = __webpack_require__(/*! ./main */ "./frontend/components/main.jsx");
 
 var _main2 = _interopRequireDefault(_main);
 
+var _banner = __webpack_require__(/*! ./banner */ "./frontend/components/banner.jsx");
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 exports.default = function () {
   return _react2.default.createElement(
     'div',
     null,
+    _react2.default.createElement(_banner.Banner, null),
     _react2.default.createElement(_main2.default, null)
+  );
+};
+
+/***/ }),
+
+/***/ "./frontend/components/banner.jsx":
+/*!****************************************!*\
+  !*** ./frontend/components/banner.jsx ***!
+  \****************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.Banner = undefined;
+
+var _react = __webpack_require__(/*! react */ "./node_modules/react/index.js");
+
+var _react2 = _interopRequireDefault(_react);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+var Banner = exports.Banner = function Banner() {
+  return _react2.default.createElement(
+    "div",
+    { id: "banner" },
+    _react2.default.createElement(
+      "h1",
+      null,
+      _react2.default.createElement(
+        "a",
+        { href: "" },
+        "Publist"
+      )
+    ),
+    _react2.default.createElement(
+      "ul",
+      null,
+      _react2.default.createElement(
+        "li",
+        null,
+        _react2.default.createElement(
+          "a",
+          { href: "" },
+          "Home"
+        )
+      ),
+      _react2.default.createElement(
+        "li",
+        null,
+        _react2.default.createElement(
+          "a",
+          { href: "" },
+          "About"
+        )
+      ),
+      _react2.default.createElement(
+        "li",
+        null,
+        _react2.default.createElement(
+          "a",
+          { href: "" },
+          "Contact"
+        )
+      )
+    )
   );
 };
 
@@ -160,7 +233,7 @@ var Main = function (_React$Component) {
 
     _this.state = {
       articles: null,
-      query: null
+      query: ""
     };
 
     _this.fetchArticles = _this.fetchArticles.bind(_this);
@@ -173,8 +246,7 @@ var Main = function (_React$Component) {
       var _this2 = this;
 
       event.preventDefault();
-      var queryString = this.state.query;
-      console.log(queryString);
+      var queryString = this.state.query; // fetch articles based on search terms (query)
 
       fetch(url, {
         method: "POST",
@@ -190,6 +262,8 @@ var Main = function (_React$Component) {
       }).then(function (response) {
         _this2.setState({ articles: response.data });
       });
+
+      this.setState({ query: "" });
     }
   }, {
     key: "update",
@@ -210,60 +284,64 @@ var Main = function (_React$Component) {
       if (this.state.articles) {
         var articles = this.state.articles;
         content = articles.map(function (article, i) {
+          var authors = article.authors ? _react2.default.createElement(
+            "li",
+            null,
+            "By: ",
+            article.authors
+          ) : _react2.default.createElement(
+            "li",
+            null,
+            "\xA0"
+          );
+
           return _react2.default.createElement(
             "ul",
-            { key: i },
+            { id: "article", key: i },
             _react2.default.createElement(
               "li",
               null,
-              article.title
+              _react2.default.createElement(
+                "a",
+                { href: article.url },
+                article.title
+              )
             ),
+            authors,
             _react2.default.createElement(
               "li",
-              null,
-              "by ",
-              article.authors
-            ),
-            _react2.default.createElement(
-              "li",
-              null,
+              { id: "article-desc" },
               article.description
-            ),
-            _react2.default.createElement(
-              "li",
-              null,
-              article.url
             ),
             _react2.default.createElement("li", null)
           );
         });
+        // display default message if articles have not been fetched
       } else {
         content = _react2.default.createElement(
           "div",
           null,
-          "No articles yet!"
+          "Search above for articles!"
         );
       }
 
       return _react2.default.createElement(
         "div",
-        null,
+        { id: "main" },
         _react2.default.createElement(
           "form",
           { onSubmit: function onSubmit(event) {
               return _this4.fetchArticles(event);
             } },
-          _react2.default.createElement(
-            "label",
-            { htmlFor: "search" },
-            "Search by keywords:",
-            _react2.default.createElement("input", { type: "text", placeholder: "Search terms", onChange: this.update('query') }),
-            _react2.default.createElement("input", { type: "submit" })
-          )
+          _react2.default.createElement("input", {
+            id: "search-bar",
+            placeholder: "Search by keyword then press Enter",
+            onChange: this.update('query'),
+            value: this.state.query })
         ),
         _react2.default.createElement(
           "ul",
-          null,
+          { id: "content" },
           content
         )
       );

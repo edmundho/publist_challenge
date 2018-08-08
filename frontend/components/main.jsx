@@ -6,7 +6,7 @@ class Main extends React.Component {
 
     this.state = {
       articles: null,
-      query: null,
+      query: "",
     };
 
     this.fetchArticles = this.fetchArticles.bind(this);
@@ -14,8 +14,7 @@ class Main extends React.Component {
 
   fetchArticles (event) {
     event.preventDefault();
-    let queryString = this.state.query;
-    console.log(queryString);
+    let queryString = this.state.query; // fetch articles based on search terms (query)
 
     fetch(url, {
       method: "POST",
@@ -30,6 +29,8 @@ class Main extends React.Component {
       .then(response => {
         this.setState({ articles: response.data });
       });
+
+    this.setState({ query: "" });
   }
 
   update (field) {
@@ -44,29 +45,36 @@ class Main extends React.Component {
     if (this.state.articles) {
       let articles = this.state.articles;
       content = articles.map((article, i) => {
+        const authors = article.authors ? <li>By: {article.authors}</li> : <li>&nbsp;</li>;
+        
         return (
-          <ul key={i}>
-            <li>{article.title}</li>
-            <li>by {article.authors}</li>
-            <li>{article.description}</li>
-            <li>{article.url}</li>
+          <ul id="article" key={i}>
+            <li>
+              <a href={article.url}>
+                {article.title}
+              </a>
+            </li>
+            {authors}
+            <li id="article-desc">{article.description}</li>
             <li></li>
           </ul>
         );
       });
+      // display default message if articles have not been fetched
     } else {
-      content = <div>No articles yet!</div>;
+      content = <div>Search above for articles!</div>;
     }
 
     return (
-      <div>
+      <div id="main">
         <form onSubmit={event => this.fetchArticles(event)}>
-          <label htmlFor="search">Search by keywords:
-            <input type="text" placeholder="Search terms" onChange={this.update('query')}/>
-            <input type="submit"/>
-          </label>
+            <input 
+              id="search-bar" 
+              placeholder="Search by keyword then press Enter" 
+              onChange={this.update('query')} 
+              value={this.state.query}/>
         </form>
-        <ul>
+        <ul id="content">
           {content}
         </ul>
       </div>
