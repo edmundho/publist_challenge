@@ -1,7 +1,9 @@
+@import url('https://fonts.googleapis.com/css?family=Roboto:300');
+
 html, body {
   /* width: 95%; */
   /* margin: 0 auto; */
-  font-family: Helvetica Neue;
+  font-family: 'Roboto', sans-serif;
   background: snow;
 }
 
@@ -65,6 +67,9 @@ html, body {
 }
 
 #article {  
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
   padding: 10px;
   margin: 10px;
   background: rgb(100, 137, 211);
@@ -74,7 +79,7 @@ html, body {
   box-shadow: 1px 1px 1px 1px lightgray;
 }
 
-#article li:first-child {
+#article > ul > li:first-child {
   font-size: 25px;
   text-decoration: underline;
   margin: 0 0 5px 0;
@@ -87,4 +92,19 @@ html, body {
 
 #article #article-desc {
   line-height: 20px;
+}
+
+img {
+  height: 150px;
+}
+
+#article-stats {
+  display: flex;
+}
+
+#article-stats li {
+  font-size: 14px;
+  padding: 5px;
+  margin: 15px 0 0 0;
+  text-decoration: none;
 }

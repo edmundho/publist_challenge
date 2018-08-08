@@ -27,6 +27,7 @@ class Main extends React.Component {
       .then(res => res.json())
       .catch(error => console.log('Error:', error))
       .then(response => {
+        console.table(response.data);
         this.setState({ articles: response.data });
       });
 
@@ -44,24 +45,35 @@ class Main extends React.Component {
 
     if (this.state.articles) {
       let articles = this.state.articles;
+
       content = articles.map((article, i) => {
+        // if article.authors is null, render empty li
         const authors = article.authors ? <li>By: {article.authors}</li> : <li>&nbsp;</li>;
+        // convert article read time to minutes
+        const readTime = article.read_time / 60;
         
         return (
-          <ul id="article" key={i}>
-            <li>
-              <a href={article.url}>
-                {article.title}
-              </a>
-            </li>
-            {authors}
-            <li id="article-desc">{article.description}</li>
-            <li></li>
-          </ul>
+          <div id="article">
+            <ul  key={i}>
+              <li>
+                <a href={article.url}>
+                  {article.title}
+                </a>
+              </li>
+              {authors}
+              <li id="article-desc">{article.description}</li>
+              <ul id="article-stats">
+                <li>Score: {Math.round(article.score)}</li>
+                <li>{readTime} minute read</li> 
+              </ul>
+              <li></li>
+            </ul>
+            <img src={article.image_url} alt={article.slug} />
+          </div>
         );
       });
-      // display default message if articles have not been fetched
     } else {
+      // display default message if articles have not been fetched
       content = <div>Search above for articles!</div>;
     }
 

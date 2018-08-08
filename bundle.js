@@ -260,6 +260,7 @@ var Main = function (_React$Component) {
       }).catch(function (error) {
         return console.log('Error:', error);
       }).then(function (response) {
+        console.table(response.data);
         _this2.setState({ articles: response.data });
       });
 
@@ -283,7 +284,9 @@ var Main = function (_React$Component) {
 
       if (this.state.articles) {
         var articles = this.state.articles;
+
         content = articles.map(function (article, i) {
+          // if article.authors is null, render empty li
           var authors = article.authors ? _react2.default.createElement(
             "li",
             null,
@@ -294,30 +297,53 @@ var Main = function (_React$Component) {
             null,
             "\xA0"
           );
+          // convert article read time to minutes
+          var readTime = article.read_time / 60;
 
           return _react2.default.createElement(
-            "ul",
-            { id: "article", key: i },
+            "div",
+            { id: "article" },
             _react2.default.createElement(
-              "li",
-              null,
+              "ul",
+              { key: i },
               _react2.default.createElement(
-                "a",
-                { href: article.url },
-                article.title
-              )
+                "li",
+                null,
+                _react2.default.createElement(
+                  "a",
+                  { href: article.url },
+                  article.title
+                )
+              ),
+              authors,
+              _react2.default.createElement(
+                "li",
+                { id: "article-desc" },
+                article.description
+              ),
+              _react2.default.createElement(
+                "ul",
+                { id: "article-stats" },
+                _react2.default.createElement(
+                  "li",
+                  null,
+                  "Score: ",
+                  Math.round(article.score)
+                ),
+                _react2.default.createElement(
+                  "li",
+                  null,
+                  readTime,
+                  " minute read"
+                )
+              ),
+              _react2.default.createElement("li", null)
             ),
-            authors,
-            _react2.default.createElement(
-              "li",
-              { id: "article-desc" },
-              article.description
-            ),
-            _react2.default.createElement("li", null)
+            _react2.default.createElement("img", { src: article.image_url, alt: article.slug })
           );
         });
-        // display default message if articles have not been fetched
       } else {
+        // display default message if articles have not been fetched
         content = _react2.default.createElement(
           "div",
           null,
